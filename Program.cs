@@ -6,7 +6,7 @@ namespace conwayApp
     class Program
     {
         private static int sleep = 10;
-        private static int numGenerations = 100;
+        private static int numGenerations = 500;
         private static int gridSize = 50;
 
         static void Main(string[] args)
@@ -75,17 +75,29 @@ namespace conwayApp
 
             bool[,] nextGeneration = new bool[gridSize, gridSize];
 
-            for (int i = 1; i < gridSize - 1; ++i) {
-                for (int j = 1; j < gridSize - 1; ++j) {
+            for (int i = 0; i < gridSize; ++i) {
+                for (int j = 0; j < gridSize; ++j) {
                     bool isCurrentlyAlive = currentGeneration[i, j];
-                    int numNeighborsAlive = IsNeighborAlive(currentGeneration, i-1, j-1) + 
-                                            IsNeighborAlive(currentGeneration, i-1, j) + 
-                                            IsNeighborAlive(currentGeneration, i-1, j+1) + 
-                                            IsNeighborAlive(currentGeneration, i  , j-1) + 
-                                            IsNeighborAlive(currentGeneration, i  , j+1) + 
-                                            IsNeighborAlive(currentGeneration, i+1, j-1) + 
-                                            IsNeighborAlive(currentGeneration, i+1, j) + 
-                                            IsNeighborAlive(currentGeneration, i+1, j+1);
+                    int prevI = i-1;
+                    if (prevI < 0)
+                        prevI = gridSize - 1;
+                    int prevJ = j-1;
+                    if (prevJ < 0)
+                        prevJ = gridSize - 1;
+                    int nextI = i+1;
+                    if (nextI >= gridSize)
+                        nextI = 0;
+                    int nextJ = j+1;
+                    if (nextJ >= gridSize)
+                        nextJ = 0;
+                    int numNeighborsAlive = IsNeighborAlive(currentGeneration, prevI, prevJ) + 
+                                            IsNeighborAlive(currentGeneration, prevI, j    ) + 
+                                            IsNeighborAlive(currentGeneration, prevI, nextJ) + 
+                                            IsNeighborAlive(currentGeneration, i    , prevJ) + 
+                                            IsNeighborAlive(currentGeneration, i    , nextJ) + 
+                                            IsNeighborAlive(currentGeneration, nextI, prevJ) + 
+                                            IsNeighborAlive(currentGeneration, nextI, j    ) + 
+                                            IsNeighborAlive(currentGeneration, nextI, nextJ);
                     
                     if (isCurrentlyAlive && (numNeighborsAlive == 2 || numNeighborsAlive == 3))
                         nextGeneration[i, j] = true;
